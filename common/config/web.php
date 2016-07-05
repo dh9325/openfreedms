@@ -37,6 +37,9 @@ return [
         ],
         'admin'  => [
             'class' => 'app\modules\admin\Module'
+        ],
+        'install'  => [
+            'class' => 'app\modules\install\Module'
         ]
     ]
 ];
