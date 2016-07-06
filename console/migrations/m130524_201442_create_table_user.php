@@ -23,8 +23,24 @@ class m130524_201442_create_table_user extends Migration
             'is_master_admin' => $this->boolean()->defaultValue(0),
             'status' => $this->smallInteger()->notNull()->defaultValue(10),
             'created_at' => $this->integer()->notNull(),
+            'created_by' => $this->string(255)->notNull(),
             'updated_at' => $this->integer()->notNull(),
+            'updated_by' => $this->string(255)->notNull(),
         ], $tableOptions);
+
+        $this->insert('{{%user}}', [
+            'username' => Yii::$app->get('masterAdmin')->username,
+            'auth_key' => Yii::$app->security->generateRandomString(),
+            'password_hash' => Yii::$app->security->generatePasswordHash(Yii::$app->get('masterAdmin')->password),
+            'email' => Yii::$app->get('masterAdmin')->email,
+            'is_admin' => 1,
+            'is_master_admin' => 1,
+            'status' => 10,
+            'created_at' => time(),
+            'created_by' => 'm130524_201442_create_table_user',
+            'updated_at' => time(),
+            'updated_by' => 'm130524_201442_create_table_user'
+        ]);
     }
 
     public function down()
