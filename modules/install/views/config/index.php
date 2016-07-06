@@ -40,8 +40,33 @@ $form = ActiveForm::begin();
             </div>
         </div>
         <div class="row">
-            <div class="col-md-3"></div>
-            <div class="col-md-3"></div>
+            <div class="col-md-3">
+                <?= $form->field($model, 'masterAdminUsername',
+                    ['inputOptions' => ['disabled' => $model->isConfigured()]]); ?>
+            </div>
+            <div class="col-md-3">
+                <?= $form->field($model, 'masterAdminPassword', [
+                    'inputOptions' => [
+                        'disabled' => $model->isConfigured(),
+                        'type' => 'password'
+                    ]
+                ]); ?>
+            </div>
+            <div class="col-md-3">
+                <?= $form->field($model, 'masterAdminEmail', [
+                    'inputOptions' => [
+                        'disabled' => $model->isConfigured(),
+                        'type' => 'email'
+                    ]
+                ]); ?>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div class="row">
+            <div class="col-md-12">
+                <hr>
+            </div>
         </div>
         <div class="row">
             <div class="col-md-12">

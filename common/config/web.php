@@ -15,7 +15,6 @@ return [
             'cookieValidationKey'    => 'xxxxxxx',
         ],
         'user'       => [
-//            'class' => 'app\common\components\WebUser',
             'identityClass'   => 'common\models\User',
             'enableAutoLogin' => true,
             'returnUrl' => '/user/dashboard'

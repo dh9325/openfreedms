@@ -20,6 +20,9 @@ return [
                 ],
             ],
         ],
+        'masterAdmin' => [
+            'class' => 'modules\install\components\MasterAdmin'
+        ]
     ],
     'params' => $params,
 ];

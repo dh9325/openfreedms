@@ -11,21 +11,39 @@ class Configuration extends Model
     const PLACEHOLDER_DB_NAME = '{{dbname}}';
     const PLACEHOLDER_USERNAME = '{{username}}';
     const PLACEHOLDER_PASSWORD = '{{password}}';
+    const PLACEHOLDER_MASTER_ADMIN_USERNAME = '{{masterAdminUsername}}';
+    const PLACEHOLDER_MASTER_ADMIN_PASSWORD = '{{masterAdminPassword}}';
+    const PLACEHOLDER_MASTER_ADMIN_EMAIL = '{{email}}';
 
     public $host;
     public $databaseName;
     public $username;
     public $password;
+    public $masterAdminUsername;
+    public $masterAdminPassword;
+    public $masterAdminEmail;
 
     protected $configured = false;
 
     public function rules()
     {
         return [
-            [['host', 'databaseName', 'username', 'password'], 'required'],
+            [
+                [
+                    'host',
+                    'databaseName',
+                    'username',
+                    'password',
+                    'masterAdminUsername',
+                    'masterAdminPassword',
+                    'masterAdminEmail'
+                ],
+                'required'
+            ],
             [['host'], 'string'],
-            [['username'], 'string', 'max' => 16],
-            [['password'], 'string', 'max' => 16],
+            [['username', 'password'], 'string', 'max' => 16],
+            [['masterAdminUsername', 'masterAdminPassword'], 'string', 'max' => 16],
+            [['masterAdminEmail'], 'email'],
             [['databaseName'], 'match', 'pattern' => '/^[a-z0-9\_\-]{1,64}$/i']
         ];
     }
@@ -75,15 +93,23 @@ class Configuration extends Model
      */
     public function saveConfiguration()
     {
-        // grab main-local config and override the placeholders
         try {
+            // grab main-local config and override the placeholders
             $file = Yii::getAlias('@app/common/config/main-local.php');
             $config = file_get_contents($file);
             $config = str_replace(self::PLACEHOLDER_HOST, $this->host, $config);
             $config = str_replace(self::PLACEHOLDER_DB_NAME, $this->databaseName, $config);
             $config = str_replace(self::PLACEHOLDER_USERNAME, $this->username, $config);
             $config = str_replace(self::PLACEHOLDER_PASSWORD, $this->password, $config);
-            if((bool)file_put_contents($file, $config)){
+            $commonConfig = (bool)file_put_contents($file, $config);
+            // grab console main-local to override the placeholders
+            $file = Yii::getAlias('@app/console/config/main-local.php');
+            $config = file_get_contents($file);
+            $config = str_replace(self::PLACEHOLDER_MASTER_ADMIN_USERNAME, $this->masterAdminUsername, $config);
+            $config = str_replace(self::PLACEHOLDER_MASTER_ADMIN_PASSWORD, $this->masterAdminPassword, $config);
+            $config = str_replace(self::PLACEHOLDER_MASTER_ADMIN_EMAIL, $this->masterAdminEmail, $config);
+            $consoleConfig = (bool)file_put_contents($file, $config);
+            if ($commonConfig && $consoleConfig) {
                 $this->configured = true;
                 return true;
             }
