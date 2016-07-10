@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\install\models;
+namespace modules\install\models;
 
 use Yii;
 use yii\base\Model;
@@ -14,6 +14,7 @@ class Configuration extends Model
     const PLACEHOLDER_MASTER_ADMIN_USERNAME = '{{masterAdminUsername}}';
     const PLACEHOLDER_MASTER_ADMIN_PASSWORD = '{{masterAdminPassword}}';
     const PLACEHOLDER_MASTER_ADMIN_EMAIL = '{{email}}';
+    const PLACEHOLDER_MASTER_ADMIN_DEPARTMENT = '{{department}}';
 
     public $host;
     public $databaseName;
@@ -22,6 +23,7 @@ class Configuration extends Model
     public $masterAdminUsername;
     public $masterAdminPassword;
     public $masterAdminEmail;
+    public $department;
 
     protected $configured = false;
 
@@ -36,11 +38,12 @@ class Configuration extends Model
                     'password',
                     'masterAdminUsername',
                     'masterAdminPassword',
-                    'masterAdminEmail'
+                    'masterAdminEmail',
+                    'department'
                 ],
                 'required'
             ],
-            [['host'], 'string'],
+            [['host', 'department'], 'string'],
             [['username', 'password'], 'string', 'max' => 16],
             [['masterAdminUsername', 'masterAdminPassword'], 'string', 'max' => 16],
             [['masterAdminEmail'], 'email'],
@@ -108,6 +111,7 @@ class Configuration extends Model
             $config = str_replace(self::PLACEHOLDER_MASTER_ADMIN_USERNAME, $this->masterAdminUsername, $config);
             $config = str_replace(self::PLACEHOLDER_MASTER_ADMIN_PASSWORD, $this->masterAdminPassword, $config);
             $config = str_replace(self::PLACEHOLDER_MASTER_ADMIN_EMAIL, $this->masterAdminEmail, $config);
+            $config = str_replace(self::PLACEHOLDER_MASTER_ADMIN_DEPARTMENT, $this->department, $config);
             $consoleConfig = (bool)file_put_contents($file, $config);
             if ($commonConfig && $consoleConfig) {
                 $this->configured = true;

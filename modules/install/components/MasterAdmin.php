@@ -9,4 +9,5 @@ class MasterAdmin extends Component
     public $username;
     public $password;
     public $email;
+    public $department;
 }

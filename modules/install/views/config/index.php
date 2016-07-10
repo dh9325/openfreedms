@@ -1,6 +1,6 @@
 <?php
 /**
- * @var $model \app\modules\install\models\Configuration
+ * @var $model \modules\install\models\Configuration
  */
 use \yii\bootstrap\ActiveForm;
 use yii\bootstrap\Html;
@@ -59,6 +59,10 @@ $form = ActiveForm::begin();
                         'type' => 'email'
                     ]
                 ]); ?>
+            </div>
+            <div class="col-md-3">
+                <?= $form->field($model, 'department',
+                    ['inputOptions' => ['disabled' => $model->isConfigured()]]); ?>
             </div>
         </div>
     </section>

@@ -4,7 +4,8 @@ return [
         'masterAdmin' => [
             'username' => '{{masterAdminUsername}}',
             'password' => '{{masterAdminPassword}}',
-            'email' => '{{email}}'
+            'email' => '{{email}}',
+            'department' => '{{department}}'
         ]
     ]
 ];

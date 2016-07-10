@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\install;
+namespace modules\install;
 
 class Module extends \yii\base\Module
 {

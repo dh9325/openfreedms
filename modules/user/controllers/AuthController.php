@@ -1,17 +1,12 @@
 <?php
 
-namespace app\modules\user\controllers;
+namespace modules\user\controllers;
 
-use common\models\LoginForm;
+use common\models\forms\LoginForm;
 use Yii;
 
 class AuthController extends BaseUserController
 {
-    public function actionError()
-    {
-        return $this->render('error');
-    }
-
     /**
      * Logs in a user.
      *
@@ -30,5 +25,17 @@ class AuthController extends BaseUserController
                 'model' => $model,
             ]);
         }
+    }
+
+    /**
+     * Logs out the current user.
+     *
+     * @return mixed
+     */
+    public function actionLogout()
+    {
+        Yii::$app->user->logout();
+
+        return $this->goHome();
     }
 }

@@ -1,5 +1,5 @@
 <?php
-namespace app\common\models;
+namespace common\models;
 
 use Yii;
 use yii\base\NotSupportedException;
@@ -16,6 +16,8 @@ use yii\web\IdentityInterface;
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $email
+ * @property boolean $is_admin
+ * @property boolean $is_master_admin
  * @property string $auth_key
  * @property integer $status
  * @property integer $created_at
@@ -193,5 +195,21 @@ class User extends ActiveRecord implements IdentityInterface
     public function removePasswordResetToken()
     {
         $this->password_reset_token = null;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isAdmin()
+    {
+        return (bool)$this->is_admin;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isMasterAdmin()
+    {
+        return (bool)$this->is_master_admin;
     }
 }

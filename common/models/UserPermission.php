@@ -1,8 +1,10 @@
 <?php
 
-namespace app\common\models;
+namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "user_permission".
@@ -50,6 +52,21 @@ class UserPermission extends \yii\db\ActiveRecord
                 'skipOnError' => true,
                 'targetClass' => User::className(),
                 'targetAttribute' => ['user_id' => 'id']
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'blame' => [
+                'class' => BlameableBehavior::className(),
+            ],
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
             ],
         ];
     }

@@ -24,6 +24,9 @@ return [
                 ],
             ],
         ],
+        'system' => [
+            'class' => 'common\components\System'
+        ]
     ],
     'bootstrap' => ['log'],
 ];
