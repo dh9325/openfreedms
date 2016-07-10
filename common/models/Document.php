@@ -1,8 +1,10 @@
 <?php
 
-namespace app\common\models;
+namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "document".
@@ -55,6 +57,21 @@ class Document extends \yii\db\ActiveRecord
             ],
             [['revision_number', 'status', 'is_archived', 'is_checked_out', 'created_at', 'updated_at'], 'integer'],
             [['title', 'reference_number', 'created_by', 'updated_by'], 'string', 'max' => 255],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'blame' => [
+                'class' => BlameableBehavior::className(),
+            ],
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+            ],
         ];
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace app\modules\admin;
+namespace modules\admin;
 
 class Module extends \yii\base\Module
 {

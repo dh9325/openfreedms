@@ -32,13 +32,13 @@ return [
             'allowedIPs' => ['*']
         ],
         'user'  => [
-            'class' => 'app\modules\user\Module'
+            'class' => 'modules\user\Module'
         ],
         'admin'  => [
-            'class' => 'app\modules\admin\Module'
+            'class' => 'modules\admin\Module'
         ],
         'install'  => [
-            'class' => 'app\modules\install\Module'
+            'class' => 'modules\install\Module'
         ]
     ]
 ];

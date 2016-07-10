@@ -3,11 +3,12 @@
 /* @var $this \yii\web\View */
 /* @var $content string */
 
-use app\modules\admin\assets\AppAsset;
+use yii\helpers\ArrayHelper;
 use yii\helpers\Html;
 use yii\bootstrap\Nav;
 use yii\bootstrap\NavBar;
 use yii\widgets\Breadcrumbs;
+use modules\admin\assets\AppAsset;
 use common\widgets\Alert;
 
 AppAsset::register($this);
@@ -28,20 +29,43 @@ AppAsset::register($this);
 <div class="wrap">
     <?php
     NavBar::begin([
-        'brandLabel' => 'My Company',
+        'brandLabel' => 'Open Free DMS',
         'brandUrl' => Yii::$app->homeUrl,
         'options' => [
             'class' => 'navbar-inverse navbar-fixed-top',
         ],
     ]);
     $menuItems = [
-        ['label' => 'Home', 'url' => ['/site/index']],
+        ['label' => 'Home', 'url' => ['/user/dashboard']],
     ];
     if (Yii::$app->user->isGuest) {
-        $menuItems[] = ['label' => 'Login', 'url' => ['/site/login']];
+        $menuItems[] = ['label' => 'Login', 'url' => ['/user/auth/login']];
     } else {
+        if (Yii::$app->user->identity->isMasterAdmin() || Yii::$app->user->identity->isAdmin()) {
+            if (Yii::$app->user->identity->isMasterAdmin()) {
+                $masterAdminItems = [
+                    '<li class="divider"></li>',
+                    ['label' => Yii::t('app', 'Add User'), 'url' => '/admin/user-management/add']
+                ];
+            }
+            $menuItems[] = [
+                'label' => Yii::t('app', 'Admin'),
+                'url' => '/admin/dashboard',
+                'items' => ArrayHelper::merge([
+                    ['label' => Yii::t('app', 'Add Department'), 'url' => '/admin/department-management/add'],
+                    [
+                        'label' => Yii::t('app', 'Add Document Category'),
+                        'url' => '/admin/document-management/add-document-category'
+                    ],
+                    ['label' => Yii::t('app', 'Add Contributor'), 'url' => '/admin/user-management/add-contributor'],
+                    ['label' => Yii::t('app', 'Add Reviewer'), 'url' => '/admin/user-management/add-reviewer'],
+                    ['label' => Yii::t('app', 'Add Approver'), 'url' => '/admin/user-management/add-approver'],
+                ], $masterAdminItems)
+            ];
+        }
+
         $menuItems[] = '<li>'
-            . Html::beginForm(['/site/logout'], 'post')
+            . Html::beginForm(['/auth/logout'], 'post')
             . Html::submitButton(
                 'Logout (' . Yii::$app->user->identity->username . ')',
                 ['class' => 'btn btn-link']
@@ -67,7 +91,7 @@ AppAsset::register($this);
 
 <footer class="footer">
     <div class="container">
-        <p class="pull-left">&copy; My Company <?= date('Y') ?></p>
+        <p class="pull-left">&copy; Open Free DMS <?= date('Y') ?></p>
 
         <p class="pull-right"><?= Yii::powered() ?></p>
     </div>

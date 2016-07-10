@@ -15,10 +15,19 @@ class m160629_210054_create_table_department extends Migration
         $this->createTable('{{%department}}', [
             'id' => $this->primaryKey(),
             'name' => $this->string(255),
+            'status' => $this->integer()->defaultValue(10),
             'created_at' => $this->integer()->notNull(),
             'created_by' => $this->string()->notNull(),
             'updated_at' => $this->integer()->notNull(),
             'updated_by' => $this->string()->notNull(),
+        ]);
+
+        $this->insert('{{%department}}', [
+            'name' => Yii::$app->get('masterAdmin')->department,
+            'created_at' => time(),
+            'created_by' => 'm160629_210054_create_table_department',
+            'updated_at' => time(),
+            'updated_by' => 'm160629_210054_create_table_department'
         ]);
     }
 

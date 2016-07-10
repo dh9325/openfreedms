@@ -1,8 +1,10 @@
 <?php
 
-namespace app\common\models;
+namespace common\models;
 
 use Yii;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "department".
@@ -18,12 +20,28 @@ use Yii;
  */
 class Department extends \yii\db\ActiveRecord
 {
+    const STATUS_INACTIVE = 0;
+    const STATUS_ACTIVE = 10;
+
     /**
      * @inheritdoc
      */
     public static function tableName()
     {
         return '{{%department}}';
+    }
+
+    /**
+     * @return null|static
+     */
+    public static function findDefault()
+    {
+        return self::findOne(1);
+    }
+
+    public static function findAllActive()
+    {
+        return self::find()->where('status = :status', [':status' => self::STATUS_ACTIVE])->all();
     }
 
     /**
@@ -35,6 +53,21 @@ class Department extends \yii\db\ActiveRecord
             [['created_at', 'created_by', 'updated_at', 'updated_by'], 'required'],
             [['created_at', 'updated_at'], 'integer'],
             [['name', 'created_by', 'updated_by'], 'string', 'max' => 255],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'blame' => [
+                'class' => BlameableBehavior::className(),
+            ],
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
+            ],
         ];
     }
 

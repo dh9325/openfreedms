@@ -1,8 +1,9 @@
 <?php
 
+use common\models\Department;
 use yii\db\Migration;
 
-class m130524_201442_create_table_user extends Migration
+class m160629_210060_create_table_user extends Migration
 {
     public function up()
     {
@@ -19,6 +20,7 @@ class m130524_201442_create_table_user extends Migration
             'password_hash' => $this->string()->notNull(),
             'password_reset_token' => $this->string()->unique(),
             'email' => $this->string()->notNull()->unique(),
+            'department' => $this->integer()->notNull(),
             'is_admin' => $this->boolean()->defaultValue(0),
             'is_master_admin' => $this->boolean()->defaultValue(0),
             'status' => $this->smallInteger()->notNull()->defaultValue(10),
@@ -33,6 +35,7 @@ class m130524_201442_create_table_user extends Migration
             'auth_key' => Yii::$app->security->generateRandomString(),
             'password_hash' => Yii::$app->security->generatePasswordHash(Yii::$app->get('masterAdmin')->password),
             'email' => Yii::$app->get('masterAdmin')->email,
+            'department' => Department::findDefault()->id,
             'is_admin' => 1,
             'is_master_admin' => 1,
             'status' => 10,

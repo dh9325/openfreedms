@@ -1,8 +1,8 @@
 <?php
 
-namespace app\modules\install\controllers;
+namespace modules\install\controllers;
 
-use app\modules\install\models\Configuration;
+use modules\install\models\Configuration;
 use Yii;
 use yii\web\Controller;
 use yii\filters\AccessControl;
