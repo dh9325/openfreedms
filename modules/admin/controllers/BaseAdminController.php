@@ -4,6 +4,7 @@ namespace modules\admin\controllers;
 
 use common\components\System;
 use Yii;
+use yii\filters\AccessControl;
 use yii\web\Controller;
 
 class BaseAdminController extends Controller
@@ -20,6 +21,25 @@ class BaseAdminController extends Controller
     {
         parent::init();
         $this->system = Yii::$app->system;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'access' => [
+                'class' => AccessControl::className(),
+                'rules' => [
+                    [
+                        'actions' => [],
+                        'allow' => true,
+                        'roles' => ['@']
+                    ]
+                ],
+            ]
+        ];
     }
 
     /**
