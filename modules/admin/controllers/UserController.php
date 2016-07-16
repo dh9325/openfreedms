@@ -2,9 +2,11 @@
 
 namespace modules\admin\controllers;
 
+use common\models\forms\CreateUser;
 use Yii;
 use common\models\User;
 use common\models\search\UserSearch as UserSearch;
+use yii\base\Security;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
@@ -63,15 +65,18 @@ class UserController extends BaseAdminController
      */
     public function actionCreate()
     {
-        $model = new User();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        $model = new CreateUser();
+        if (Yii::$app->getRequest()->isPost) {
+            $model->load(Yii::$app->getRequest()->post());
+            if ($id = $this->system->addUser($model->username, Yii::$app->getSecurity()->generateRandomString(),
+                $model->email, $model->department)
+            ) {
+                return $this->redirect(['view', 'id' => $id]);
+            }
         }
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**

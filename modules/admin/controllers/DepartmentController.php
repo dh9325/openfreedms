@@ -2,8 +2,9 @@
 
 namespace modules\admin\controllers;
 
-use Yii;
 use common\models\Department;
+use common\models\forms\CreateDepartment;
+use Yii;
 use common\models\search\DepartmentSearch;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -63,15 +64,16 @@ class DepartmentController extends BaseAdminController
      */
     public function actionCreate()
     {
-        $model = new Department();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        $model = new CreateDepartment();
+        if (Yii::$app->getRequest()->isPost) {
+            $model->load(Yii::$app->getRequest()->post());
+            if ($id = $this->system->addDepartment($model->name)) {
+                return $this->redirect(['view', 'id' => $id]);
+            }
         }
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**

@@ -2,7 +2,7 @@
 return [
     'id' => 'OpenFreeDMS',
     'defaultRoute' => 'user/',
-    'controllerNamespace' => 'app\\modules\\user\\controllers',
+    'controllerNamespace' => 'modules\\user\\controllers',
     'basePath' => dirname(dirname(__DIR__)),
     'vendorPath' => dirname(dirname(__DIR__)) . '/vendor',
     'components' => [
