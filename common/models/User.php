@@ -31,6 +31,11 @@ class User extends ActiveRecord implements IdentityInterface
     const STATUS_DELETED = 0;
     const STATUS_ACTIVE = 10;
 
+    public static $statuses = [
+        self::STATUS_DELETED => 'Deleted',
+        self::STATUS_ACTIVE => 'Active'
+    ];
+
 
     /**
      * @inheritdoc
@@ -130,6 +135,14 @@ class User extends ActiveRecord implements IdentityInterface
     }
 
     /**
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function findAllActive()
+    {
+        return self::find()->where('status = :status', [':status' => self::STATUS_ACTIVE])->all();
+    }
+
+    /**
      * @inheritdoc
      */
     public function getId()
@@ -203,7 +216,7 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function isAdmin()
     {
-        return (bool)$this->is_admin;
+        return (bool)($this->is_admin || $this->is_master_admin);
     }
 
     /**
@@ -212,5 +225,39 @@ class User extends ActiveRecord implements IdentityInterface
     public function isMasterAdmin()
     {
         return (bool)$this->is_master_admin;
+    }
+
+    /**
+     * @return bool
+     */
+    public function isContributor()
+    {
+        return (bool)self::find()
+            ->innerJoin('{{%contributor}}', '{{%user}}.id = {{%contributor}}.user_id')
+            ->where('{{%user}}.id = :id', [':id' => $this->id])
+            ->count();
+    }
+
+    /**
+     * @return bool
+     */
+    public function isApprover()
+    {
+        return (bool)self::find()
+            ->innerJoin('{{%approver}}', '{{%user}}.id = {{%approver}}.user_id')
+            ->where('{{%user}}.id = :id', [':id' => $this->id])
+            ->count();
+    }
+
+
+    /**
+     * @return bool
+     */
+    public function isReviewer()
+    {
+        return (bool)self::find()
+            ->innerJoin('{{%reviewer}}', '{{%user}}.id = {{%reviewer}}.user_id')
+            ->where('{{%user}}.id = :id', [':id' => $this->id])
+            ->count();
     }
 }

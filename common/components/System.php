@@ -2,12 +2,17 @@
 
 namespace common\components;
 
+use common\models\Approver;
+use common\models\Contributor;
 use common\models\Department;
+use common\models\DocumentCategory;
+use common\models\Reviewer;
 use common\models\User;
+use Yii;
 use yii\base\Component;
 
 /**
- * Wrapper class for all methods sent from UI (see https://en.wikipedia.org/wiki/Facade_pattern)
+ * Wrapper class for all messages sent from UI (see https://en.wikipedia.org/wiki/Facade_pattern)
  *
  * Class System
  * @package common\components
@@ -20,13 +25,82 @@ class System extends Component
         $user->setAttribute('username', $username);
         $user->setAttribute('email', $email);
         $user->setPassword($password);
-        if (is_int($department)) {
-            $user->setAttribute('department', $department);
+        $user->setAttribute('department', $department);
+        if ($user->save()) {
+            // todo: allow configuration of email from and subject(?)
+            // send email notification
+            Yii::$app->mailer->compose('add-user', compact('username', 'password'))
+                ->setFrom('dnr@openfreedms.com')
+                ->setTo($email)
+                ->setSubject(Yii::t('app', 'Document Management System credentials'))
+                ->send();
+            return $user->id;
+        } else {
+            return 0;
         }
-        if ($department instanceof Department) {
-            $user->setAttribute('department', $department->id);
+    }
+
+    public function addDepartment($name)
+    {
+        $model = new Department();
+        $model->setAttribute('name', $name);
+        if ($model->save()) {
+            return $model->id;
+        } else {
+            return 0;
         }
-        return $user->save();
+    }
+
+    public function addDocumentCategory($name)
+    {
+        $model = new DocumentCategory();
+        $model->setAttribute('name', $name);
+        if ($model->save()) {
+            return $model->id;
+        } else {
+            return 0;
+        }
+    }
+
+    public function addContributor($user, $department)
+    {
+        $model = new Contributor();
+        $model->setAttribute('user_id', $user);
+        $model->setAttribute('department_id', $department);
+        if ($model->save()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function addReviewer($user, $department)
+    {
+        $model = new Reviewer();
+        $model->setAttribute('user_id', $user);
+        $model->setAttribute('department_id', $department);
+        if ($model->save()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function addApprover($user, $department)
+    {
+        $model = new Approver();
+        $model->setAttribute('user_id', $user);
+        $model->setAttribute('department_id', $department);
+        if ($model->save()) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    public function addDocument()
+    {
+        // todo: implement
     }
 
 }

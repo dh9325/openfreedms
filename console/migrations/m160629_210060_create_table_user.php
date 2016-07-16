@@ -30,6 +30,8 @@ class m160629_210060_create_table_user extends Migration
             'updated_by' => $this->string(255)->notNull(),
         ], $tableOptions);
 
+        $this->addForeignKey('fk_user_department', '{{%user}}', 'department', '{{%department}}', 'id');
+
         $this->insert('{{%user}}', [
             'username' => Yii::$app->get('masterAdmin')->username,
             'auth_key' => Yii::$app->security->generateRandomString(),

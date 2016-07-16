@@ -3,16 +3,18 @@
 namespace common\models;
 
 use Yii;
-use yii\behaviors\BlameableBehavior;
-use yii\behaviors\TimestampBehavior;
 
 /**
- * This is the model class for table "document".
+ * This is the model class for table "{{%document}}".
  *
  * @property integer $id
  * @property string $title
  * @property string $reference_number
  * @property integer $revision_number
+ * @property integer $document_category
+ * @property integer $department
+ * @property integer $workflow
+ * @property integer $file
  * @property integer $status
  * @property integer $is_archived
  * @property integer $is_checked_out
@@ -22,6 +24,10 @@ use yii\behaviors\TimestampBehavior;
  * @property string $updated_by
  *
  * @property DepartmentPermission[] $departmentPermissions
+ * @property DocumentCategory $department0
+ * @property DocumentCategory $documentCategory
+ * @property File $file0
+ * @property Workflow $workflow0
  * @property UserPermission[] $userPermissions
  */
 class Document extends \yii\db\ActiveRecord
@@ -45,32 +51,57 @@ class Document extends \yii\db\ActiveRecord
                     'title',
                     'reference_number',
                     'revision_number',
+                    'document_category',
+                    'department',
+                    'workflow',
+                    'file',
+                ],
+                'required'
+            ],
+            [
+                [
+                    'revision_number',
+                    'document_category',
+                    'department',
+                    'workflow',
+                    'file',
                     'status',
                     'is_archived',
                     'is_checked_out',
                     'created_at',
-                    'created_by',
-                    'updated_at',
-                    'updated_by'
+                    'updated_at'
                 ],
-                'required'
+                'integer'
             ],
-            [['revision_number', 'status', 'is_archived', 'is_checked_out', 'created_at', 'updated_at'], 'integer'],
             [['title', 'reference_number', 'created_by', 'updated_by'], 'string', 'max' => 255],
-        ];
-    }
-
-    /**
-     * @inheritdoc
-     */
-    public function behaviors()
-    {
-        return [
-            'blame' => [
-                'class' => BlameableBehavior::className(),
+            [['reference_number'], 'unique'],
+            [
+                ['department'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => DocumentCategory::className(),
+                'targetAttribute' => ['department' => 'id']
             ],
-            'timestamp' => [
-                'class' => TimestampBehavior::className(),
+            [
+                ['document_category'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => DocumentCategory::className(),
+                'targetAttribute' => ['document_category' => 'id']
+            ],
+            [
+                ['file'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => File::className(),
+                'targetAttribute' => ['file' => 'id']
+            ],
+            [
+                ['workflow'],
+                'exist',
+                'skipOnError' => true,
+                'targetClass' => Workflow::className(),
+                'targetAttribute' => ['workflow' => 'id']
             ],
         ];
     }
@@ -85,6 +116,10 @@ class Document extends \yii\db\ActiveRecord
             'title' => Yii::t('app', 'Title'),
             'reference_number' => Yii::t('app', 'Reference Number'),
             'revision_number' => Yii::t('app', 'Revision Number'),
+            'document_category' => Yii::t('app', 'Document Category'),
+            'department' => Yii::t('app', 'Department'),
+            'workflow' => Yii::t('app', 'Workflow'),
+            'file' => Yii::t('app', 'File'),
             'status' => Yii::t('app', 'Status'),
             'is_archived' => Yii::t('app', 'Is Archived'),
             'is_checked_out' => Yii::t('app', 'Is Checked Out'),
@@ -101,6 +136,38 @@ class Document extends \yii\db\ActiveRecord
     public function getDepartmentPermissions()
     {
         return $this->hasMany(DepartmentPermission::className(), ['document_id' => 'id']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDepartment()
+    {
+        return $this->hasOne(DocumentCategory::className(), ['id' => 'department']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getDocumentCategory()
+    {
+        return $this->hasOne(DocumentCategory::className(), ['id' => 'document_category']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getFile()
+    {
+        return $this->hasOne(File::className(), ['id' => 'file']);
+    }
+
+    /**
+     * @return \yii\db\ActiveQuery
+     */
+    public function getWorkflow()
+    {
+        return $this->hasOne(Workflow::className(), ['id' => 'workflow']);
     }
 
     /**

@@ -2,8 +2,9 @@
 
 namespace modules\admin\controllers;
 
-use Yii;
 use common\models\DocumentCategory;
+use common\models\forms\CreateDocumentCategory;
+use Yii;
 use common\models\search\DocumentCategorySearch as DocumentCategorySearch;
 use yii\helpers\ArrayHelper;
 use yii\web\NotFoundHttpException;
@@ -63,15 +64,16 @@ class DocumentCategoryController extends BaseAdminController
      */
     public function actionCreate()
     {
-        $model = new DocumentCategory();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        $model = new CreateDocumentCategory();
+        if (Yii::$app->getRequest()->isPost) {
+            $model->load(Yii::$app->request->post());
+            if ($id = $this->system->addDocumentCategory($model->name)) {
+                return $this->redirect(['view', 'id' => $id]);
+            }
         }
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
