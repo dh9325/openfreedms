@@ -24,7 +24,6 @@ class m160710_093100_create_table_system extends Migration
             'revision_path' => $this->string(255)->defaultValue(System::DEFAULT_DATA_REVISION_PATH)->notNull(),
         ));
         $this->insert('{{%system}}', [
-            'language' => System::DEFAULT_LOCALE,
             'authentication' => System::AUTH_METHOD_SQL,
             'data_path' => System::DEFAULT_DATA_PATH,
             'revision_path' => System::DEFAULT_DATA_REVISION_PATH

@@ -2,6 +2,8 @@
 
 namespace modules\user;
 
+use common\models\System;
+
 class Module extends \yii\base\Module
 {
 
@@ -16,6 +18,7 @@ class Module extends \yii\base\Module
         \Yii::$app->setHomeUrl('/user/dashboard');
         \Yii::$app->user->loginUrl = '/user/auth/login';
         \Yii::$app->errorHandler->errorAction = '/user/auth/error';
+        \Yii::$app->language = System::getLanguage();
     }
 
 }

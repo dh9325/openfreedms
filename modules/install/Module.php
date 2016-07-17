@@ -2,6 +2,8 @@
 
 namespace modules\install;
 
+use common\models\System;
+
 class Module extends \yii\base\Module
 {
 
@@ -16,6 +18,7 @@ class Module extends \yii\base\Module
         \Yii::$app->setHomeUrl('/config/index');
         \Yii::$app->user->loginUrl = '/user/auth/login';
         \Yii::$app->errorHandler->errorAction = '/user/dashboard/error';
+        \Yii::$app->language = System::getLanguage();
 
         \Yii::configure($this, [
             'components' => [
