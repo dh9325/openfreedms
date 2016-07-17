@@ -2,7 +2,6 @@
 
 namespace common\assets;
 
-use common\models\System;
 use yii\web\AssetBundle;
 
 /**
@@ -12,22 +11,12 @@ class AppAsset extends AssetBundle
 {
     public $basePath = '@webroot';
     public $baseUrl = '@web';
-    public $css = [];
+    public $css = [
+        'css/site.css'
+    ];
     public $js = [];
     public $depends = [
-        'yii\web\YiiAsset'
+        'yii\web\YiiAsset',
+        'common\components\bootstrap\BootstrapAsset'
     ];
-
-    public function init()
-    {
-        $theme = System::getTheme();
-        if (!$theme) {
-            $this->depends[] = 'yii\bootstrap\BootstrapAsset';
-        } else {
-            $theme = strtolower($theme);
-            $this->css[] = "css/themes/{$theme}.min.css";
-        }
-        $this->css[] = 'css/site.css';
-        parent::init();
-    }
 }
