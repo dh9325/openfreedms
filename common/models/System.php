@@ -42,7 +42,8 @@ class System extends \yii\db\ActiveRecord
     const DEFAULT_DATA_PATH = '@app/data/';
     const DEFAULT_DATA_REVISION_PATH = '@app/data/revision/';
 
-    const DEFAULT_LOCALE = 'en_GB';
+    const DEFAULT_LOCALE = 'en-GB';
+    const LOCALE_PL_PL = 'pl-PL';
 
     public static $themes = [
         self::THEME_CERULEAN => self::THEME_CERULEAN,
@@ -62,6 +63,15 @@ class System extends \yii\db\ActiveRecord
         self::THEME_SUPERHERO => self::THEME_SUPERHERO,
         self::THEME_UNITED => self::THEME_UNITED,
         self::THEME_YETI => self::THEME_YETI,
+    ];
+
+    public static $authMethods = [
+        self::AUTH_METHOD_SQL => self::AUTH_METHOD_SQL,
+        self::AUTH_METHODS_LDAP => self::AUTH_METHODS_LDAP
+    ];
+
+    public static $availableLanguages = [
+        self::LOCALE_PL_PL => 'Polish / Polski'
     ];
 
     /**
@@ -85,13 +95,27 @@ class System extends \yii\db\ActiveRecord
         }
     }
 
+    public static function getLanguage()
+    {
+        $row = self::find()->one();
+        if ($row) {
+            return $row->language;
+        } else {
+            return self::DEFAULT_LOCALE;
+        }
+    }
+
     /**
      * @inheritdoc
      */
     public function rules()
     {
         return [
-            [['logo', 'theme', 'language', 'authentication', 'data_path', 'revision_path'], 'string', 'max' => 255],
+            [
+                ['name', 'logo', 'theme', 'language', 'authentication', 'data_path', 'revision_path'],
+                'string',
+                'max' => 255
+            ],
         ];
     }
 

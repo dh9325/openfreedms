@@ -17,11 +17,12 @@ use yii\widgets\ActiveForm;
 
     <?= $form->field($model, 'logo')->fileInput([]); ?>
 
-    <?= $form->field($model, 'theme')->dropDownList(System::$themes, ['prompt' => Yii::t('app', 'Select')]); ?>
+    <?= $form->field($model, 'theme')->dropDownList(System::$themes, ['prompt' => Yii::t('app', 'Default')]); ?>
 
-    <?= $form->field($model, 'language')->dropDownList([], ['prompt' => Yii::t('app', 'Select')]); ?>
+    <?= $form->field($model, 'language')->dropDownList(System::$availableLanguages,
+        ['prompt' => Yii::t('app', 'Default')]); ?>
 
-    <?= $form->field($model, 'authentication')->dropDownList([], ['prompt' => Yii::t('app', 'Select')]); ?>
+    <?= $form->field($model, 'authentication')->dropDownList(System::$authMethods, []); ?>
 
     <?= $form->field($model, 'data_path')->textInput(); ?>
 
