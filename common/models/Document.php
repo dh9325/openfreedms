@@ -3,6 +3,9 @@
 namespace common\models;
 
 use Yii;
+use yii\base\InvalidParamException;
+use yii\behaviors\BlameableBehavior;
+use yii\behaviors\TimestampBehavior;
 
 /**
  * This is the model class for table "{{%document}}".
@@ -38,6 +41,24 @@ class Document extends \yii\db\ActiveRecord
     public static function tableName()
     {
         return '{{%document}}';
+    }
+
+    public static function findNoDepartmentPermissions($department)
+    {
+        return self::find()
+            ->leftJoin('{{%department_permission}}', '{{%document}}.id = {{%department_permission}}.document_id')
+            ->where('{{%department_permission}}.department_id != :id', [':id' => $department])
+            ->orWhere('{{%department_permission}}.department_id IS NULL')
+            ->all();
+    }
+
+    public static function findNoUserPermissions($user)
+    {
+        return self::find()
+            ->leftJoin('{{%user_permission}}', '{{%document}}.id = {{%user_permission}}.document_id')
+            ->where('{{%user_permission}}.user_id != :id', [':id' => $user])
+            ->orWhere('{{%user_permission}}.user_id IS NULL')
+            ->all();
     }
 
     /**
@@ -102,6 +123,21 @@ class Document extends \yii\db\ActiveRecord
                 'skipOnError' => true,
                 'targetClass' => Workflow::className(),
                 'targetAttribute' => ['workflow' => 'id']
+            ],
+        ];
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function behaviors()
+    {
+        return [
+            'blame' => [
+                'class' => BlameableBehavior::className(),
+            ],
+            'timestamp' => [
+                'class' => TimestampBehavior::className(),
             ],
         ];
     }
@@ -176,5 +212,20 @@ class Document extends \yii\db\ActiveRecord
     public function getUserPermissions()
     {
         return $this->hasMany(UserPermission::className(), ['document_id' => 'id']);
+    }
+
+    public function setStatusOnCreate()
+    {
+        switch ($this->workflow) {
+            case Workflow::TYPE_NO_APPROVAL:
+                $this->status = Workflow::STATUS_PUBLISHED;
+                break;
+            case Workflow::TYPE_ONE_LEVEL_APPROVAL:
+            case Workflow::TYPE_TWO_LEVEL_APPROVAL:
+                $this->status = Workflow::STATUS_AWAITING_REVIEW;
+                break;
+            default:
+                throw new InvalidParamException('Incorrect workflow - cannot set status');
+        }
     }
 }

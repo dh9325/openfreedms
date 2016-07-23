@@ -34,6 +34,9 @@ return [
         'setWritable' => [
             'public/runtime',
             'public/assets',
+            'data/',
+            'data/revision',
+            'data/uploads',
         ],
         'setExecutable' => [
             'yii',
@@ -46,6 +49,9 @@ return [
         'setWritable' => [
             'public/runtime',
             'public/assets',
+            'data/',
+            'data/revision',
+            'data/uploads',
         ],
         'setExecutable' => [
             'yii',

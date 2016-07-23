@@ -16,6 +16,7 @@ class m160629_210143_create_table_department_permission extends Migration
             'id' => $this->primaryKey(),
             'department_id' => $this->integer()->notNull(),
             'document_id' => $this->integer()->notNull(),
+            'type' => $this->integer()->notNull(),
             'created_at' => $this->integer()->notNull(),
             'created_by' => $this->string()->notNull(),
             'updated_at' => $this->integer()->notNull(),

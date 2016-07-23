@@ -18,6 +18,25 @@ use yii\behaviors\TimestampBehavior;
  */
 class Workflow extends \yii\db\ActiveRecord
 {
+    const TYPE_NO_APPROVAL = 1;
+    const TYPE_ONE_LEVEL_APPROVAL = 2;
+    const TYPE_TWO_LEVEL_APPROVAL = 3;
+
+    const STATUS_PUBLISHED = 1;
+    const STATUS_AWAITING_REVIEW = 2;
+    const STATUS_REJECTED = 3;
+    const STATUS_AWAITING_APPROVAL = 4;
+    const STATUS_DISAPPROVED = 5;
+
+
+    public static $workflows = [
+        // todo: translate
+        self::TYPE_NO_APPROVAL => 'No Approval',
+        self::TYPE_ONE_LEVEL_APPROVAL => 'One Level Approval',
+        self::TYPE_TWO_LEVEL_APPROVAL => 'Two Level Approval'
+    ];
+
+
     /**
      * @inheritdoc
      */

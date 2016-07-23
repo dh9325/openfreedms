@@ -48,7 +48,7 @@ AppAsset::register($this);
                 'items' => [
                     [
                         'label' => Yii::t('app', 'Approve Documents'),
-                        'url' => ''
+                        'url' => '/admin/document/approve'
                     ]
                 ]
             ];
@@ -59,7 +59,15 @@ AppAsset::register($this);
                 'items' => [
                     [
                         'label' => Yii::t('app', 'Add Document'),
-                        'url' => ''
+                        'url' => '/admin/document/create'
+                    ],
+                    [
+                        'label' => Yii::t('app', 'Manage Department Permissions'),
+                        'url' => '/admin/department-permission/'
+                    ],
+                    [
+                        'label' => Yii::t('app', 'Manage User Permissions'),
+                        'url' => '/admin/user-permission/'
                     ]
                 ]
             ];
@@ -70,7 +78,7 @@ AppAsset::register($this);
                 'items' => [
                     [
                         'label' => Yii::t('app', 'Review Documents'),
-                        'url' => ''
+                        'url' => '/admin/document/review'
                     ]
                 ]
             ];
@@ -81,7 +89,11 @@ AppAsset::register($this);
                 [
                     'label' => Yii::t('app', 'System Management'),
                     'url' => '/admin/system/view'
-                ]
+                ],
+                [
+                    'label' => Yii::t('app', 'File Format Management'),
+                    'url' => '/admin/file-format/view'
+                ],
             ];
         }
         if (Yii::$app->user->getIdentity()->isAdmin()) {

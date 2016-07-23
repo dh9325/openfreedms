@@ -28,6 +28,23 @@ class Reviewer extends \yii\db\ActiveRecord
     }
 
     /**
+     * @param $department
+     * @param null $user
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function getForDepartment($department, $user = null)
+    {
+        $query = self::find()
+            ->joinWith('department')
+            ->joinWith('user')
+            ->where('department_id = :id', [':id' => $department]);
+        if ($user) {
+            $query->andWhere('user_id = :user', [':user' => $user]);
+        }
+        return $query->all();
+    }
+
+    /**
      * @inheritdoc
      */
     public function rules()

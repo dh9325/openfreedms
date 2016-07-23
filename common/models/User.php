@@ -1,6 +1,7 @@
 <?php
 namespace common\models;
 
+use common\interfaces\Permission;
 use Yii;
 use yii\base\NotSupportedException;
 use yii\behaviors\BlameableBehavior;
@@ -16,6 +17,7 @@ use yii\web\IdentityInterface;
  * @property string $password_hash
  * @property string $password_reset_token
  * @property string $email
+ * @property integer $department
  * @property boolean $is_admin
  * @property boolean $is_master_admin
  * @property string $auth_key
@@ -69,6 +71,7 @@ class User extends ActiveRecord implements IdentityInterface
             ['status', 'default', 'value' => self::STATUS_ACTIVE],
             ['status', 'in', 'range' => [self::STATUS_ACTIVE, self::STATUS_DELETED]],
             [['email', 'username'], 'unique'],
+            [['department', 'created_at', 'updated_at'], 'integer'],
         ];
     }
 
@@ -140,6 +143,21 @@ class User extends ActiveRecord implements IdentityInterface
     public static function findAllActive()
     {
         return self::find()->where('status = :status', [':status' => self::STATUS_ACTIVE])->all();
+    }
+
+    /**
+     * @param bool $active
+     * @return array|\yii\db\ActiveRecord[]
+     */
+    public static function findNonAdmins($active = false)
+    {
+        $query = self::find()
+            ->where('is_admin = 0')
+            ->andWhere('is_master_admin = 0');
+        if ($active) {
+            $query->andWhere('status = :status', [':status' => self::STATUS_ACTIVE]);
+        }
+        return $query->all();
     }
 
     /**
@@ -232,6 +250,9 @@ class User extends ActiveRecord implements IdentityInterface
      */
     public function isContributor()
     {
+        if ($this->isAdmin()) {
+            return true;
+        }
         return (bool)self::find()
             ->innerJoin('{{%contributor}}', '{{%user}}.id = {{%contributor}}.user_id')
             ->where('{{%user}}.id = :id', [':id' => $this->id])
@@ -259,5 +280,117 @@ class User extends ActiveRecord implements IdentityInterface
             ->innerJoin('{{%reviewer}}', '{{%user}}.id = {{%reviewer}}.user_id')
             ->where('{{%user}}.id = :id', [':id' => $this->id])
             ->count();
+    }
+
+    /**
+     * @param $document
+     * @return bool
+     */
+    public function canView($document)
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+        // check user permissions first as they take priority over department permissions
+        $userPermission = UserPermission::findType($this->getId(), $document->id);
+        if ($userPermission && $userPermission >= Permission::TYPE_VIEW) {
+            return true;
+        }
+        // check department permissions
+        $departmentPermission = DepartmentPermission::findType($this->department, $document->id);
+        if ($departmentPermission && $departmentPermission >= Permission::TYPE_VIEW) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param $document
+     * @return bool
+     */
+    public function canRead($document)
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+        // check user permissions first as they take priority over department permissions
+        $userPermission = UserPermission::findType($this->getId(), $document->id);
+        if ($userPermission && $userPermission >= Permission::TYPE_READ) {
+            return true;
+        }
+        // check department permissions
+        $departmentPermission = DepartmentPermission::findType($this->department, $document->id);
+        if ($departmentPermission && $departmentPermission >= Permission::TYPE_READ) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param $document
+     * @return bool
+     */
+    public function canEdit($document)
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+        // check user permissions first as they take priority over department permissions
+        $userPermission = UserPermission::findType($this->getId(), $document->id);
+        if ($userPermission && $userPermission >= Permission::TYPE_EDIT) {
+            return true;
+        }
+        // check department permissions
+        $departmentPermission = DepartmentPermission::findType($this->department, $document->id);
+        if ($departmentPermission && $departmentPermission >= Permission::TYPE_EDIT) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param $document
+     * @return bool
+     */
+    public function canAdmin($document)
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+        // check user permissions first as they take priority over department permissions
+        $userPermission = UserPermission::findType($this->getId(), $document->id);
+        if ($userPermission && $userPermission == Permission::TYPE_ADMIN) {
+            return true;
+        }
+        // check department permissions
+        $departmentPermission = DepartmentPermission::findType($this->department, $document->id);
+        if ($departmentPermission && $departmentPermission == Permission::TYPE_ADMIN) {
+            return true;
+        }
+        return false;
+    }
+
+    /**
+     * @param $document
+     * @return bool
+     */
+    public function canReview($document)
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+        return (bool)count(Reviewer::getForDepartment($document->department, $this->getId()));
+    }
+
+    /**
+     * @param $document
+     * @return bool
+     */
+    public function canApprove($document)
+    {
+        if ($this->isAdmin()) {
+            return true;
+        }
+        return (bool)count(Approver::getForDepartment($document->department, $this->getId()));
     }
 }

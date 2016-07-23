@@ -1,4 +1,4 @@
-<?php
+#<?php
 
 use yii\db\Migration;
 
@@ -22,8 +22,8 @@ class m160629_210007_create_table_document extends Migration
             'workflow' => $this->integer()->notNull(),
             'file' => $this->integer()->notNull(),
             'status' => $this->integer()->notNull(),
-            'is_archived' => $this->boolean()->notNull(),
-            'is_checked_out' => $this->boolean()->notNull(),
+            'is_archived' => $this->boolean()->defaultValue(0),
+            'is_checked_out' => $this->boolean()->defaultValue(0),
             'created_at' => $this->integer()->notNull(),
             'created_by' => $this->string()->notNull(),
             'updated_at' => $this->integer()->notNull(),

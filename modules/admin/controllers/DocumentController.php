@@ -2,12 +2,15 @@
 
 namespace modules\admin\controllers;
 
+use common\models\File;
+use common\models\forms\CreateDocument;
+use common\models\Workflow;
 use Yii;
 use common\models\Document;
 use common\models\search\Document as DocumentSearch;
-use modules\admin\controllers\BaseAdminController;
 use yii\web\NotFoundHttpException;
 use yii\filters\VerbFilter;
+use yii\web\UploadedFile;
 
 /**
  * DocumentController implements the CRUD actions for Document model.
@@ -36,7 +39,7 @@ class DocumentController extends BaseAdminController
     public function actionIndex()
     {
         $searchModel = new DocumentSearch();
-        $dataProvider = $searchModel->search(Yii::$app->request->queryParams);
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, Workflow::STATUS_PUBLISHED);
 
         return $this->render('index', [
             'searchModel' => $searchModel,
@@ -63,15 +66,21 @@ class DocumentController extends BaseAdminController
      */
     public function actionCreate()
     {
-        $model = new Document();
-
-        if ($model->load(Yii::$app->request->post()) && $model->save()) {
-            return $this->redirect(['view', 'id' => $model->id]);
-        } else {
-            return $this->render('create', [
-                'model' => $model,
-            ]);
+        $model = new CreateDocument();
+        if (Yii::$app->getRequest()->isPost) {
+            $model->load(Yii::$app->request->post());
+            $model->file = UploadedFile::getInstance($model, 'file');
+            if ($fileId = $model->upload()) {
+                if ($id = $this->system->addDocument($model->documentCategory, $model->department, $fileId,
+                    $model->workflow, $model->title, $model->revision, $model->referenceNumber)
+                ) {
+                    return $this->redirect(['view', 'id' => $id]);
+                }
+            }
         }
+        return $this->render('create', [
+            'model' => $model,
+        ]);
     }
 
     /**
@@ -104,6 +113,43 @@ class DocumentController extends BaseAdminController
         $this->findModel($id)->delete();
 
         return $this->redirect(['index']);
+    }
+
+    /**
+     * @return string
+     */
+    public function actionReview()
+    {
+        $searchModel = new DocumentSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, Workflow::STATUS_AWAITING_REVIEW);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    /**
+     * @return string
+     */
+    public function actionApprove()
+    {
+        $searchModel = new DocumentSearch();
+        $dataProvider = $searchModel->search(Yii::$app->request->queryParams, Workflow::STATUS_AWAITING_APPROVAL);
+
+        return $this->render('index', [
+            'searchModel' => $searchModel,
+            'dataProvider' => $dataProvider,
+        ]);
+    }
+
+    public function actionRead($id)
+    {
+        /** @var $document Document */
+        $document = Document::findOne($id);
+        /** @var $file File */
+        $file = $document->getFile()->one();
+        return Yii::$app->getResponse()->sendFile($file->path);
     }
 
     /**

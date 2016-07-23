@@ -7,3 +7,4 @@ Yii::setAlias('@install', dirname(dirname(__DIR__)) . '/modules/install');
 Yii::setAlias('@console', dirname(dirname(__DIR__)) . '/console');
 Yii::setAlias('@webroot', dirname(dirname(__DIR__)) . '/public');
 Yii::setAlias('@app', dirname(dirname(__DIR__)));
+Yii::setAlias('@data', dirname(dirname(__DIR__)) . '/data');
