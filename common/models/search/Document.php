@@ -18,7 +18,10 @@ class Document extends DocumentModel
     public function rules()
     {
         return [
-            [['id', 'revision_number', 'status', 'is_archived', 'is_checked_out', 'created_at', 'updated_at'], 'integer'],
+            [
+                ['id', 'revision_number', 'status', 'is_archived', 'is_checked_out', 'created_at', 'updated_at'],
+                'integer'
+            ],
             [['title', 'reference_number', 'created_by', 'updated_by'], 'safe'],
         ];
     }
@@ -37,11 +40,16 @@ class Document extends DocumentModel
      *
      * @param array $params
      *
+     * @param null $status
      * @return ActiveDataProvider
      */
-    public function search($params)
+    public function search($params, $status = null)
     {
         $query = DocumentModel::find();
+
+        if ($status) {
+            $query->where('status = :status', [':status' => $status]);
+        }
 
         // add conditions that should always apply here
 

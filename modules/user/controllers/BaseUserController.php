@@ -34,7 +34,6 @@ class BaseUserController extends Controller
                         'roles' => ['?'],
                     ],
                     [
-                        'actions' => [],
                         'allow' => true,
                         'roles' => ['@']
                     ]

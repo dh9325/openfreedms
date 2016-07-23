@@ -36,7 +36,8 @@ class File extends \yii\db\ActiveRecord
         return [
             [['path', 'file_format'], 'required'],
             [['file_format', 'created_at'], 'integer'],
-            [['path', 'created_by'], 'string', 'max' => 255],
+            [['path'], 'string', 'max' => 255],
+            [['created_by'], 'safe'],
             [
                 ['file_format'],
                 'exist',
