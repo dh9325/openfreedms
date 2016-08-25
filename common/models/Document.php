@@ -27,7 +27,7 @@ use yii\behaviors\TimestampBehavior;
  * @property string $updated_by
  *
  * @property DepartmentPermission[] $departmentPermissions
- * @property DocumentCategory $department0
+ * @property Department $department0
  * @property DocumentCategory $documentCategory
  * @property File $file0
  * @property Workflow $workflow0
@@ -100,7 +100,7 @@ class Document extends \yii\db\ActiveRecord
                 ['department'],
                 'exist',
                 'skipOnError' => true,
-                'targetClass' => DocumentCategory::className(),
+                'targetClass' => Department::className(),
                 'targetAttribute' => ['department' => 'id']
             ],
             [
@@ -179,7 +179,7 @@ class Document extends \yii\db\ActiveRecord
      */
     public function getDepartment()
     {
-        return $this->hasOne(DocumentCategory::className(), ['id' => 'department']);
+        return $this->hasOne(Department::className(), ['id' => 'department']);
     }
 
     /**

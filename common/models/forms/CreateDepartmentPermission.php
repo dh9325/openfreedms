@@ -7,7 +7,7 @@ use common\models\Department;
 use common\models\Document;
 use yii\base\Model;
 
-class CreateDepartmentPermission extends Model implements Permission
+class CreateDepartmentPermission extends Model
 {
     public $document;
     public $department;
@@ -35,11 +35,11 @@ class CreateDepartmentPermission extends Model implements Permission
                 ['type'],
                 'in',
                 'range' => [
-                    self::TYPE_DENIED,
-                    self::TYPE_VIEW,
-                    self::TYPE_READ,
-                    self::TYPE_EDIT,
-                    self::TYPE_ADMIN
+                    Permission::TYPE_DENIED,
+                    Permission::TYPE_VIEW,
+                    Permission::TYPE_READ,
+                    Permission::TYPE_EDIT,
+                    Permission::TYPE_ADMIN
                 ],
                 'allowArray' => true
             ]
