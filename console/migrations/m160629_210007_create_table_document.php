@@ -30,7 +30,7 @@ class m160629_210007_create_table_document extends Migration
             'updated_by' => $this->string()->notNull(),
         ]);
         $this->addForeignKey('fk_document_document_category', '{{%document}}', 'document_category', '{{%document_category}}', 'id');
-        $this->addForeignKey('fk_document_department', '{{%document}}', 'department', '{{%document_category}}', 'id');
+        $this->addForeignKey('fk_document_department', '{{%document}}', 'department', '{{%department}}', 'id');
         $this->addForeignKey('fk_document_workflow', '{{%document}}', 'workflow', '{{%workflow}}', 'id');
         $this->addForeignKey('fk_document_file', '{{%document}}', 'file', '{{%file}}', 'id');
     }
