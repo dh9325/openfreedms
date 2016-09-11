@@ -5,7 +5,7 @@ OpenFree DMS is a free, open source document management software designed to ben
  sized organisations by providing document management software without excessive charges or a need of hiring
   a team of developers.
  
- Major features:
+Major features:
  -	Minimal dependencies and requirements
  -	Support for multiple languages
  -	Multiple methods of authentication (including LDAP and MySQL)
@@ -15,19 +15,19 @@ OpenFree DMS is a free, open source document management software designed to ben
  -	Ability to upload a company logo
  -	Ability to customize look and feel of the software (via themes and/or CSS)
  
- Installation:
+Installation:
  - Using Git: run `git clone https://github.com/dh9325/openfreedms.git` and then  `git checkout develop`
  - Download `https://github.com/dh9325/openfreedms/archive/develop.zip` and unzip
  
- Running the application - production:
+Running the application - production:
  - Run `composer install` (NOTE: by default this will initialise the application in production environment)
  - Go to `http://your-configured-domain.com/install` and configure the application
  
- Running the application - development:
+Running the application - development:
  - Change configuration files in `environments/dev`
  - Run `yii init` and choose `development` to initialise the application 
 
- Dependencies:
+Dependencies:
  - PHP version min. 5.4
  - Composer
  - FXP Composer Asset Plugin 
