@@ -92,7 +92,7 @@ AppAsset::register($this);
                 ],
                 [
                     'label' => Yii::t('app', 'File Format Management'),
-                    'url' => '/admin/file-format/view'
+                    'url' => '/admin/file-format/index'
                 ],
             ];
         }

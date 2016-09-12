@@ -17,7 +17,7 @@ class Module extends \yii\base\Module
 
         \Yii::$app->setHomeUrl('/admin/dashboard');
         \Yii::$app->user->loginUrl = '/user/auth/login';
-        \Yii::$app->errorHandler->errorAction = '/user/dashboard/error';
+        \Yii::$app->errorHandler->errorAction = '/user/auth/error';
         \Yii::$app->language = System::getLanguage();
     }
 
