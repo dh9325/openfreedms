@@ -36,6 +36,13 @@ Dependencies:
 
 OpenFree DMS is based on Yii 2 Advanced Project Template [Yii 2](http://www.yiiframework.com/).
 
+Security Note
+-------------
+Please make sure that you configure your hosting environment in such a way that will **prevent access** to folders outside
+the `public` folder. That is the only folder designed to be publicly accessible. Also make sure your data directory 
+(one that will store document files in) **IS NOT** publicly accessible.
+ 
+
 DIRECTORY STRUCTURE
 -------------------
 
