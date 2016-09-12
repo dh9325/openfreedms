@@ -36,6 +36,8 @@ Dependencies:
 
 OpenFree DMS is based on Yii 2 Advanced Project Template [Yii 2](http://www.yiiframework.com/).
 
+Bootstrap themes by [Bootswatch](http://bootswatch.com/).
+
 Security Note
 -------------
 Please make sure that you configure your hosting environment in such a way that will **prevent access** to folders outside
