@@ -21,7 +21,8 @@ Installation:
  
 Running the application - production:
  - Run `composer install` (NOTE: by default this will initialise the application in production environment)
- - Go to `http://your-configured-domain.com/install` and configure the application
+ - Go to `http://your-configured-domain.com/install/config` and configure the application
+ - Go to `http://your-configured-domain.com/`, log in and start using the application
  
 Running the application - development:
  - Change configuration files in `environments/dev`
