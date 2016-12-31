@@ -5,7 +5,7 @@ use yii\db\Migration;
 /**
  * Handles the creation for table `department`.
  */
-class m160629_210054_create_table_department extends Migration
+class m160629_210007_create_table_department extends Migration
 {
     /**
      * @inheritdoc
