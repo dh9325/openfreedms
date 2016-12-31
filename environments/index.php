@@ -37,6 +37,7 @@ return [
             'data/',
             'data/revision',
             'data/uploads',
+            'runtime',
         ],
         'setExecutable' => [
             'yii',
@@ -52,6 +53,7 @@ return [
             'data/',
             'data/revision',
             'data/uploads',
+            'runtime',
         ],
         'setExecutable' => [
             'yii',
