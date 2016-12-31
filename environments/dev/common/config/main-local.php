@@ -3,9 +3,9 @@ return [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host;dbname=openfreedms',
-            'username' => '',
-            'password' => '',
+            'dsn' => 'mysql:host=dev-data.clcqww9pqi4e.eu-west-1.rds.amazonaws.com:3306;dbname=openfreedms',
+            'username' => 'dariusz_huk',
+            'password' => 'UX7vxNvC9y3hgNr',
             'charset' => 'utf8',
         ],
         'mailer' => [
