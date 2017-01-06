@@ -32,7 +32,6 @@ return [
     'Development' => [
         'path' => 'dev',
         'setWritable' => [
-            'public/runtime',
             'public/assets',
             'data/',
             'data/revision',
@@ -48,7 +47,6 @@ return [
     'Production' => [
         'path' => 'prod',
         'setWritable' => [
-            'public/runtime',
             'public/assets',
             'data/',
             'data/revision',

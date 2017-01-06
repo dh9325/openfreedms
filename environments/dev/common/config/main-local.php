@@ -1,11 +1,11 @@
 <?php
-return [
+$config = [
     'components' => [
         'db' => [
             'class' => 'yii\db\Connection',
-            'dsn' => 'mysql:host=dev-data.clcqww9pqi4e.eu-west-1.rds.amazonaws.com:3306;dbname=openfreedms',
-            'username' => 'dariusz_huk',
-            'password' => 'UX7vxNvC9y3hgNr',
+            'dsn' => 'mysql:host=localhost:3306;dbname=openfreedms',
+            'username' => 'username',
+            'password' => 'password',
             'charset' => 'utf8',
         ],
         'mailer' => [
@@ -29,3 +29,5 @@ return [
     ],
     'bootstrap' => ['gii', 'debug'],
 ];
+$config['components']['db'] = \yii\helpers\ArrayHelper::merge($config['components']['db'], include('db.php'));
+return $config;
